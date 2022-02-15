@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LUSConsole", "WinHRTool\LUSConsole.csproj", "{775E4C76-19D0-431B-95FC-5AD15899503C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{775E4C76-19D0-431B-95FC-5AD15899503C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{775E4C76-19D0-431B-95FC-5AD15899503C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{775E4C76-19D0-431B-95FC-5AD15899503C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{775E4C76-19D0-431B-95FC-5AD15899503C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20185AF0-B3DE-4974-9B75-9362B2F528DF}
+	EndGlobalSection
+EndGlobal
