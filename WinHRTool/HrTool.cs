@@ -41,33 +41,6 @@ namespace WinHRTool
             userCreated = false;
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            var handle = this.Handle;
-
-            NativeWindow win32Parent = new NativeWindow();
-            win32Parent.AssignHandle(handle);
-
-            DialogResult result = MessageBox.Show(win32Parent, "Test", "New Account for !", MessageBoxButtons.YesNo);
-            
-            switch (result)
-            {
-                case DialogResult.Yes:
-                    pbAdd.Visible=true;
-                    adAddBW.RunWorkerAsync();
-
-                    break;
-                case DialogResult.No:  
-                    break;
-            }
-
-        }
-
-        private void SearchButton_Click(object sender, EventArgs e)
-        {
-            adSearchBW.RunWorkerAsync();
-        }
-
         private void HRToolForm1_Load(object sender, EventArgs e)
         {
             personnelDataGridView1.ColumnCount = 3;
@@ -88,7 +61,18 @@ namespace WinHRTool
 
         private void editOn_Click(object sender, EventArgs e)
         {
-            adEditBW.RunWorkerAsync();
+
+            if ((tbFName.Text ?? tbLName.Text ?? tbEmail.Text ?? tbPhone.Text ?? tbDesc.Text) == null)
+            {
+
+                MessageBox.Show("Select & fill in at least one field.");
+
+            } else
+            {
+                pbEdit.Visible=true;
+                adEditBW.RunWorkerAsync();
+            }
+            
            
         }
 
@@ -112,35 +96,11 @@ namespace WinHRTool
             adDesc.Text = "Contractor";
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-
-           adSearchDeleteBW.RunWorkerAsync();
-
-        }
-
-        private void deleteUserBut_Click(object sender, EventArgs e)
-        {
-           
-            adDeleteBW.RunWorkerAsync();
-            
-        }
-
         private void adBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            if ((adFName.Text ?? adLName.Text ?? adPhoneNum.Text ?? adPhoneNum.Text ?? adTitle.Text ?? adDesc.Text) == null)
-            {
-                MessageBox.Show("Please fill in all fields.");
-            } else
-            {
-
                 userCreated = controller.AddADUser(adFName, adLName, adPhoneNum, adTitle, adDesc);
 
-            }
- 
-            
- 
         }
 
         private void adBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -154,21 +114,13 @@ namespace WinHRTool
             }
             else
             {
-                MessageBox.Show("Opoeration failed. Contact your System Administrator.");
+                MessageBox.Show("Operation failed. Contact your System Administrator.");
             }            
 
         }
 
         private void adEditBW_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            if ((tbFName.Text ?? tbLName.Text ?? tbEmail.Text ?? tbPhone.Text ?? tbDesc.Text) == null)
-            {
-
-                MessageBox.Show("Select & fill in at least one field.");
-
-            } else
-            {
 
                 tbFName.Tag = "GivenName";
                 tbLName.Tag = "SurName";
@@ -204,24 +156,15 @@ namespace WinHRTool
 
                 controller.editADUser(userActLbl.Text, true, boxes);
 
-            }
-
-           
-
         }
 
         private void adEditBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            pbEdit.Visible = false;
         }
 
         private void adDeleteBW_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            if (tbDelete.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to delete.");
-            }
 
             controller.deleteUsers(tbDelete);
 
@@ -229,17 +172,12 @@ namespace WinHRTool
 
         private void adDeleteBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            pbDelete.Visible = false;
         }
 
         private void adSearchBW_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            if (EditSearchBox.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
-            } else
-            {
                 string[] vs = controller.retrieveAD(EditSearchBox.Text);
 
                 tbFName.Text = vs[0];
@@ -247,25 +185,20 @@ namespace WinHRTool
                 tbEmail.Text = vs[2];
 
                 userActLbl.Text = vs[3];
-            }
-
-           
 
         }
 
         private void adSearchBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
+            pbEdit.Visible = false;
+
+
+
         }
 
         private void adSearchDeleteBW_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            if (tbToDelete.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
-            } else
-            {
 
                 string[] toDelete = controller.retrieveAD(tbToDelete.Text);
                 name = toDelete[3];
@@ -274,28 +207,113 @@ namespace WinHRTool
 
                 MessageBox.Show("Account information for "+ name +" returned successfully!");
 
-            }
-            
-
-         
-
         }
 
         private void adSearchDeleteBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            pbDelete.Visible = false;
+        }
+
+      
+        private void editSearch_Onclick(object sender, EventArgs e)
+        {
+
+            if (EditSearchBox.Text == null)
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
+            }
+            else
+            {
+
+                var handle = this.Handle;
+
+                NativeWindow win32Parent = new NativeWindow();
+                win32Parent.AssignHandle(handle);
+
+                DialogResult result = MessageBox.Show(win32Parent, "Test", "New Account for !", MessageBoxButtons.YesNo);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        pbEdit.Visible=true;
+                        adSearchBW.RunWorkerAsync();
+
+                        break;
+                    case DialogResult.No:
+                        break;
+                }
+
+            }
+
+
+            
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void add_OnClick(object sender, EventArgs e)
         {
 
-            //CMD cMD = new CMD();
+            if ((adFName.Text ?? adLName.Text ?? adPhoneNum.Text ?? adPhoneNum.Text ?? adTitle.Text ?? adDesc.Text) == null)
+            {
 
-            //cMD.startBAT();
+                MessageBox.Show("Please fill in all fields.");
 
-            AppFuncs appFuncs = new AppFuncs();
+            }
+            else
+            {
 
-            appFuncs.startBAT();
+                var handle = this.Handle;
+
+                NativeWindow win32Parent = new NativeWindow();
+                win32Parent.AssignHandle(handle);
+
+                DialogResult result = MessageBox.Show(win32Parent, "Are you sure you'd like to create accounts for "+adFName.Text+" "+adLName.Text+"?", "Creation Confirmation", MessageBoxButtons.YesNo);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        pbAdd.Visible=true;
+                        adAddBW.RunWorkerAsync();
+
+                        break;
+                    case DialogResult.No:
+                        break;
+                }
+
+            }
+
+        }
+
+        private void deleteSearch_OnClick(object sender, EventArgs e)
+        {
+
+            if (tbToDelete.Text == null)
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
+            } else
+            {
+                pbDelete.Visible=true;
+                adSearchDeleteBW.RunWorkerAsync();
+            }
+            
+        }
+
+        private void delete_OnClick(object sender, EventArgs e)
+        {
+
+            if (tbDelete.Text == null)
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to delete.");
+            } else
+            {
+                pbDelete.Visible = true;
+                adDeleteBW.RunWorkerAsync();
+            }
+            
+        }
+
+        private void pbDelete_Click(object sender, EventArgs e)
+        {
 
         }
     }

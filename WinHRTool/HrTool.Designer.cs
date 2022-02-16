@@ -61,7 +61,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabCreate = new System.Windows.Forms.TabPage();
-            this.testlabel = new System.Windows.Forms.Label();
+            this.pbAdd = new System.Windows.Forms.ProgressBar();
             this.adDesc = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -76,6 +76,7 @@
             this.adFName = new System.Windows.Forms.TextBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.tabEdit = new System.Windows.Forms.TabPage();
+            this.pbEdit = new System.Windows.Forms.ProgressBar();
             this.tbDesc = new System.Windows.Forms.TextBox();
             this.userActLbl = new System.Windows.Forms.Label();
             this.tbPhone = new System.Windows.Forms.TextBox();
@@ -98,6 +99,7 @@
             this.SearchButton = new System.Windows.Forms.Button();
             this.EditSearchBox = new System.Windows.Forms.TextBox();
             this.tabDelete = new System.Windows.Forms.TabPage();
+            this.pbDelete = new System.Windows.Forms.ProgressBar();
             this.label8 = new System.Windows.Forms.Label();
             this.tbDelete = new System.Windows.Forms.TextBox();
             this.deleteUserBut = new System.Windows.Forms.Button();
@@ -106,15 +108,11 @@
             this.tabView = new System.Windows.Forms.TabPage();
             this.personnelDataGridView1 = new System.Windows.Forms.DataGridView();
             this.loadUsers = new System.Windows.Forms.Button();
-            this.pbAdd = new System.Windows.Forms.ProgressBar();
             this.adAddBW = new System.ComponentModel.BackgroundWorker();
             this.adEditBW = new System.ComponentModel.BackgroundWorker();
-            this.pbEdit = new System.Windows.Forms.ProgressBar();
-            this.pbDelete = new System.Windows.Forms.ProgressBar();
             this.adDeleteBW = new System.ComponentModel.BackgroundWorker();
             this.adSearchBW = new System.ComponentModel.BackgroundWorker();
             this.adSearchDeleteBW = new System.ComponentModel.BackgroundWorker();
-            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabs.SuspendLayout();
             this.tabCreate.SuspendLayout();
@@ -376,9 +374,7 @@
             // 
             // tabCreate
             // 
-            this.tabCreate.Controls.Add(this.button1);
             this.tabCreate.Controls.Add(this.pbAdd);
-            this.tabCreate.Controls.Add(this.testlabel);
             this.tabCreate.Controls.Add(this.adDesc);
             this.tabCreate.Controls.Add(this.label5);
             this.tabCreate.Controls.Add(this.label4);
@@ -400,14 +396,12 @@
             this.tabCreate.Text = "Onboard";
             this.tabCreate.UseVisualStyleBackColor = true;
             // 
-            // testlabel
+            // pbAdd
             // 
-            this.testlabel.AutoSize = true;
-            this.testlabel.Location = new System.Drawing.Point(293, 16);
-            this.testlabel.Name = "testlabel";
-            this.testlabel.Size = new System.Drawing.Size(51, 20);
-            this.testlabel.TabIndex = 22;
-            this.testlabel.Text = "label9";
+            this.pbAdd.Location = new System.Drawing.Point(256, 669);
+            this.pbAdd.Name = "pbAdd";
+            this.pbAdd.Size = new System.Drawing.Size(100, 23);
+            this.pbAdd.TabIndex = 23;
             // 
             // adDesc
             // 
@@ -534,7 +528,7 @@
             this.SaveButton.TabIndex = 0;
             this.SaveButton.Text = "Create User";
             this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            this.SaveButton.Click += new System.EventHandler(this.add_OnClick);
             // 
             // tabEdit
             // 
@@ -568,9 +562,16 @@
             this.tabEdit.Text = "Edit";
             this.tabEdit.UseVisualStyleBackColor = true;
             // 
+            // pbEdit
+            // 
+            this.pbEdit.Location = new System.Drawing.Point(257, 699);
+            this.pbEdit.Name = "pbEdit";
+            this.pbEdit.Size = new System.Drawing.Size(100, 23);
+            this.pbEdit.TabIndex = 41;
+            // 
             // tbDesc
             // 
-            this.tbDesc.Location = new System.Drawing.Point(284, 587);
+            this.tbDesc.Location = new System.Drawing.Point(190, 564);
             this.tbDesc.Name = "tbDesc";
             this.tbDesc.Size = new System.Drawing.Size(191, 26);
             this.tbDesc.TabIndex = 40;
@@ -703,7 +704,7 @@
             // 
             this.rbConOp.AutoSize = true;
             this.rbConOp.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbConOp.Location = new System.Drawing.Point(284, 529);
+            this.rbConOp.Location = new System.Drawing.Point(190, 529);
             this.rbConOp.Name = "rbConOp";
             this.rbConOp.Size = new System.Drawing.Size(191, 29);
             this.rbConOp.TabIndex = 22;
@@ -716,7 +717,7 @@
             // 
             this.rbEmpOp.AutoSize = true;
             this.rbEmpOp.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbEmpOp.Location = new System.Drawing.Point(284, 481);
+            this.rbEmpOp.Location = new System.Drawing.Point(190, 481);
             this.rbEmpOp.Name = "rbEmpOp";
             this.rbEmpOp.Size = new System.Drawing.Size(174, 29);
             this.rbEmpOp.TabIndex = 21;
@@ -759,7 +760,7 @@
             this.SearchButton.TabIndex = 1;
             this.SearchButton.Text = "Search";
             this.SearchButton.UseVisualStyleBackColor = true;
-            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            this.SearchButton.Click += new System.EventHandler(this.editSearch_Onclick);
             // 
             // EditSearchBox
             // 
@@ -784,6 +785,14 @@
             this.tabDelete.Text = "Offboard";
             this.tabDelete.UseVisualStyleBackColor = true;
             // 
+            // pbDelete
+            // 
+            this.pbDelete.Location = new System.Drawing.Point(257, 635);
+            this.pbDelete.Name = "pbDelete";
+            this.pbDelete.Size = new System.Drawing.Size(100, 23);
+            this.pbDelete.TabIndex = 19;
+            this.pbDelete.Click += new System.EventHandler(this.pbDelete_Click);
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -803,13 +812,13 @@
             // 
             // deleteUserBut
             // 
-            this.deleteUserBut.Location = new System.Drawing.Point(215, 595);
+            this.deleteUserBut.Location = new System.Drawing.Point(215, 581);
             this.deleteUserBut.Name = "deleteUserBut";
             this.deleteUserBut.Size = new System.Drawing.Size(201, 48);
             this.deleteUserBut.TabIndex = 16;
             this.deleteUserBut.Text = "Delete";
             this.deleteUserBut.UseVisualStyleBackColor = true;
-            this.deleteUserBut.Click += new System.EventHandler(this.deleteUserBut_Click);
+            this.deleteUserBut.Click += new System.EventHandler(this.delete_OnClick);
             // 
             // deleteSearchButton
             // 
@@ -819,7 +828,7 @@
             this.deleteSearchButton.TabIndex = 2;
             this.deleteSearchButton.Text = "Search";
             this.deleteSearchButton.UseVisualStyleBackColor = true;
-            this.deleteSearchButton.Click += new System.EventHandler(this.deleteButton_Click);
+            this.deleteSearchButton.Click += new System.EventHandler(this.deleteSearch_OnClick);
             // 
             // tbToDelete
             // 
@@ -861,13 +870,6 @@
             this.loadUsers.UseVisualStyleBackColor = true;
             this.loadUsers.Click += new System.EventHandler(this.loadUsers_Click);
             // 
-            // pbAdd
-            // 
-            this.pbAdd.Location = new System.Drawing.Point(256, 669);
-            this.pbAdd.Name = "pbAdd";
-            this.pbAdd.Size = new System.Drawing.Size(100, 23);
-            this.pbAdd.TabIndex = 23;
-            // 
             // adAddBW
             // 
             this.adAddBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.adBackgroundWorker_DoWork);
@@ -877,20 +879,6 @@
             // 
             this.adEditBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.adEditBW_DoWork);
             this.adEditBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.adEditBW_RunWorkerCompleted);
-            // 
-            // pbEdit
-            // 
-            this.pbEdit.Location = new System.Drawing.Point(257, 699);
-            this.pbEdit.Name = "pbEdit";
-            this.pbEdit.Size = new System.Drawing.Size(100, 23);
-            this.pbEdit.TabIndex = 41;
-            // 
-            // pbDelete
-            // 
-            this.pbDelete.Location = new System.Drawing.Point(263, 659);
-            this.pbDelete.Name = "pbDelete";
-            this.pbDelete.Size = new System.Drawing.Size(100, 23);
-            this.pbDelete.TabIndex = 19;
             // 
             // adDeleteBW
             // 
@@ -906,16 +894,6 @@
             // 
             this.adSearchDeleteBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.adSearchDeleteBW_DoWork);
             this.adSearchDeleteBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.adSearchDeleteBW_RunWorkerCompleted);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(73, 599);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // HRTool
             // 
@@ -1020,7 +998,6 @@
         private System.Windows.Forms.TextBox tbDelete;
         private System.Windows.Forms.Button deleteUserBut;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label testlabel;
         private System.Windows.Forms.ProgressBar pbAdd;
         private System.ComponentModel.BackgroundWorker adAddBW;
         private System.ComponentModel.BackgroundWorker adEditBW;
@@ -1029,7 +1006,6 @@
         private System.ComponentModel.BackgroundWorker adDeleteBW;
         private System.ComponentModel.BackgroundWorker adSearchBW;
         private System.ComponentModel.BackgroundWorker adSearchDeleteBW;
-        private System.Windows.Forms.Button button1;
     }
 }
 
