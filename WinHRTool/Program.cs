@@ -16,7 +16,7 @@ namespace WinHRTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(mainForm: new HRTool());
+            Application.Run(mainForm: new InitialSetup());
         }
     }
 }

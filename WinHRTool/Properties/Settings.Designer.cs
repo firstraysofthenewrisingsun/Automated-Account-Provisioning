@@ -49,7 +49,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("OU=Users,OU=CardinalPeak,DC=cardinalpeak,DC=com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string adPath {
             get {
                 return ((string)(this["adPath"]));
@@ -61,7 +61,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("cardinalpeak.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string adDomain {
             get {
                 return ((string)(this["adDomain"]));
@@ -73,7 +73,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("cpsysadmin")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string adUser {
             get {
                 return ((string)(this["adUser"]));
@@ -85,7 +85,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4#a7yaof")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string adPass {
             get {
                 return ((string)(this["adPass"]));
@@ -97,7 +97,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("OS-DCPP102")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string adPDC {
             get {
                 return ((string)(this["adPDC"]));
@@ -109,7 +109,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.harvestapp.com/v2/users/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string harvestURL {
             get {
                 return ((string)(this["harvestURL"]));
@@ -118,17 +118,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGZiOWFkMDkwYTYxYTJkNDk5NGNlODg5NTk0MGYzYzhjNzc5NDRhZTM3OTI0OTM3YjIwMGUwZTQ0ZmRhNDExODU4NjQxMjg2OTY2MzRjOTIiLCJpYXQiOjE2NDQ1MjgwNjAsIm5iZiI6MTY0NDUyODA2MCwiZXhwIjoyMjc1NjgwMDYwLCJzdWIiOiIxODkiLCJzY29wZXMiOltdfQ.y0L7iMyeR89N0oot-daTl42NmSWxjoWcrfXiQFpprB_TGJ9qTr0g0WWwJYEB2syrxOmVwZnxSzV1w6OxTbOArbixcTsL_Ra0IIYj66iyxiOhYr4n_aIy8PqVuAtZxqjPnHDE5BZDHzC7N0MUvplQAV752MCvCKUyVieia7sfxKl_voqfJT8bM-JD61q5s3af4dJXT1GG-e37TKZiM1VhJhd2u1t2-PEhecpn339cMEp-OHju50u_D-z_xdBb4r92Y_ktpr60-QndavazwTqsvyZRNzQ6SnGezWDKcNntq1N4G3Zrd-FxyCD0BgE1PD3iBnNP99-CMgCCeD9xhwl0C-_dgAZsPlcS7hO82qy63yPtzEF71efZkN8JmA5hbzOVOWHSdqN3HhJCHlQiNSPnT9b4U9E-Y4Em25yjMBiRYwkRAY3zNwryAStGwCBz0XPW19AvPTiD_5FvVkqfj9rVtT10TRcyRSOZQ4CI49oi7644XglAChspMXIfgsjHCG0zbB9X2tTsUebtOTEpYbAS0EA3OeaKhSUIOVyDq2z6iTf2a49p-MlLDEcVcL5-umknFwqLJBfOEJHVtz0lZB5kqqh2d-PiEfXsyQqlmo0IpDubqnrQtS6HfOQ6K5Hpdc_zDKhI6tUPVfpbE8IAdmmkhxwhZfRqfuCGcK473sU9ubE")]
-        public string snipeKey {
-            get {
-                return ((string)(this["snipeKey"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Bearer 2915176.pt.Kc2sAv-Q394QYxFkjOxL6_Zpxu4GsDmpQ59SWjtv903-UOi0K15Eq03nQVX4XTG" +
-            "xzVQ6IhZW5YO0IxgzBStvyw")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string harvestKey {
             get {
                 return ((string)(this["harvestKey"]));
@@ -137,16 +127,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://cardinalpeak.snipe-it.io/api/v1")]
-        public string snipeURL {
-            get {
-                return ((string)(this["snipeURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("347970")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string harvestID {
             get {
                 return ((string)(this["harvestID"]));
@@ -155,7 +136,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dkvpn")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string gcdsUser {
             get {
                 return ((string)(this["gcdsUser"]));
@@ -164,7 +145,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("!Tech2010!@")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string gcdsPass {
             get {
                 return ((string)(this["gcdsPass"]));
@@ -173,34 +154,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://lastpass.com/enterpriseapi.php")]
-        public string lastpassURL {
-            get {
-                return ((string)(this["lastpassURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8252606")]
-        public string lastpassID {
-            get {
-                return ((string)(this["lastpassID"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4e3d05b80daf81ade27159c11ff9d8d20129bdb5100036a3ce99251704680e52")]
-        public string lastpassKey {
-            get {
-                return ((string)(this["lastpassKey"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AC7d8d843ce9d9c7783055ea0e871361f6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string twilioID {
             get {
                 return ((string)(this["twilioID"]));
@@ -209,7 +163,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4dc116d8332935d8a4bd503664b9069b")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string twilioToken {
             get {
                 return ((string)(this["twilioToken"]));
@@ -218,10 +172,127 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("nwptaevfpsvxogwu")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string gmaillAppPass {
             get {
                 return ((string)(this["gmaillAppPass"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string emailMessage {
+            get {
+                return ((string)(this["emailMessage"]));
+            }
+            set {
+                this["emailMessage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string emailRecipient {
+            get {
+                return ((string)(this["emailRecipient"]));
+            }
+            set {
+                this["emailRecipient"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string emailTitle {
+            get {
+                return ((string)(this["emailTitle"]));
+            }
+            set {
+                this["emailTitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string emailEditMessage {
+            get {
+                return ((string)(this["emailEditMessage"]));
+            }
+            set {
+                this["emailEditMessage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string emailSMTP {
+            get {
+                return ((string)(this["emailSMTP"]));
+            }
+            set {
+                this["emailSMTP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string adFQDN {
+            get {
+                return ((string)(this["adFQDN"]));
+            }
+            set {
+                this["adFQDN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string batCMD {
+            get {
+                return ((string)(this["batCMD"]));
+            }
+            set {
+                this["batCMD"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string scriptDirectory {
+            get {
+                return ((string)(this["scriptDirectory"]));
+            }
+            set {
+                this["scriptDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\\\psscripts\\\\runcmdremote.ps1")]
+        public string Setting {
+            get {
+                return ((string)(this["Setting"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string twilioNumber {
+            get {
+                return ((string)(this["twilioNumber"]));
+            }
+            set {
+                this["twilioNumber"] = value;
             }
         }
     }

@@ -1,9 +1,7 @@
 ﻿/*
  * Author: Derek Baugh
  * Title: Active Directory Controls
- * Description: Holds all functions pertaining to Active Directory user account management. Utilized by HRTool Form 
- *  
- *
+ * Description: Holds all functions controlling Active Directory user account management. Utilized by HRTool Form
  */
 using System;
 using System.Collections.Generic;
@@ -31,6 +29,9 @@ namespace WinHRTool
 
         public string[] retrieveAD(string searchedUser)
         {
+
+            /* Retrieves all ad users and list their attributes. Can search by last, full and SamAccountName.*/
+
             string DomainPath = "LDAP://"+Properties.Settings.Default.adPDC+"."+Properties.Settings.Default.adDomain+"/"+Properties.Settings.Default.adPath;
             DirectoryEntry searchRoot = new DirectoryEntry(DomainPath); //sets path of OU being searched
             searchRoot.Username = Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.adUser; //username of DA acct
@@ -141,8 +142,6 @@ namespace WinHRTool
 
             bool userCreated = false;
 
-           
-
             Runspace rs = RunspaceFactory.CreateRunspace(); //instantiate PowerShell runspace that will process the New-ADUser module called later
             rs.Open(); //opens the runspace, available to use
 
@@ -193,19 +192,18 @@ namespace WinHRTool
 
                 ps.Invoke(); //actual execution of New-ADUser
 
-                appFuncs.startBAT(); //runs GCDS sync from batch script on os-dcpp102
+                appFuncs.startBAT(); //runs GCDS sync from batch script on domain controller (or wherever)
 
                
                 userCreated = true; //new user process complete flag
                 
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 
-                string message = "Welcome to Cardinal Peak!\nCongratulations on your new position! We're excited to have you join the team\nAs part of our automated onboarding process you'll receive this text message and an account setup email for your Cardinal Peak Google account\n" +
-                        "Your credentials for your Active Directory account are as follows\nUsername: "+username+"\n"+"Password: "+password+"\n"+"Please use these credentials to login into the VPN and authenticate actions on your computer";
+                string message = Properties.Settings.Default.emailMessage;
 
                 bool smsSent = appFuncs.sendSMS(textBoxes[2].Text, message); //sends onboarding sms to new user at specified number.
 
-                bool emailSent = appFuncs.gmailSMTP("dbaugh@cardinalpeak.com", "hrit@cardinalpeak.atlassian.net", "Accounts for new user "+username+"", "New accounts for "+username+" have been created!"); //sends account verfification to notification email entered during initial setup
+                bool emailSent = appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
 
                 string harvestID = harvestAPI.createHarvestUser(textBoxes[0].Text, textBoxes[1].Text, email); //creates Harvest accounts, automatically sends enrollment email
                 
@@ -238,7 +236,7 @@ namespace WinHRTool
 
           /* 
            * Wrapper for PS command Set-ADUser.
-           * Sets attributes specified by user (only a select few are accessible).
+           * Sets attributes specified by user (only a select few are accessible to meet work requirements).
            */
 
             Dictionary<string, string>harvestAttributes = new Dictionary<string, string>();
@@ -270,7 +268,8 @@ namespace WinHRTool
 
                 foreach (TextBox txt in textBoxes)
                 {
-                    ps.AddCommand("Set-ADUser").AddParameter("Identity", user).AddParameter("Server", Properties.Settings.Default.adPDC).AddParameter("Credential", credential[0]).AddParameter(txt.Tag.ToString(), txt.Text); //changes the attributes selected byt the operator. attribute names are tagged to textbox object for selection
+                    ps.AddCommand("Set-ADUser").AddParameter("Identity", user).AddParameter("Server", Properties.Settings.Default.adPDC)
+                        .AddParameter("Credential", credential[0]).AddParameter(txt.Tag.ToString(), txt.Text); //changes the selected attributes. AD attribute names are tagged to textbox object for selection
                     ps.Invoke();
 
                     if (txt.Tag.ToString() == "GivenName")
@@ -299,11 +298,8 @@ namespace WinHRTool
                 
                 editsComplete = true;
 
-                string message = "Changes made";
+                appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
 
-                appFuncs.gmailSMTP("dbaugh@cardinalpeak.com", "hrit@cardinalpeak.atlassian.net", "Edits to "+user, message); //sends account verfification to notification email entered during initial setup
-
-                
                 rs.Close();
              
 
@@ -341,9 +337,8 @@ namespace WinHRTool
 
             deletionComplete = true;
 
-            string message = "Account for "+user+" deleted!";
+            bool emailSent = appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
 
-            appFuncs.gmailSMTP("dbaugh@cardinalpeak.com", "hrit@cardinalpeak.atlassian.net", "Account for "+user+ " deleted", message); //sends notification email to hr it servicedesk
 
             return deletionComplete;
         }

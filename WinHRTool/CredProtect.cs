@@ -3,7 +3,7 @@
  * Title: Credential Protection
  * Description: Encrypts passwords using the Data Protection API available in .NET.
  * Saves the encrypted credentials to the Application Settings for persistant availability between sessions.
- * Decrypts passwords using the sam API.
+ * Decrypts passwords using the same API.
  *  
  *
  */

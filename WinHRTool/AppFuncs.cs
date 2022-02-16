@@ -1,7 +1,7 @@
 ﻿/*
  * Author: Derek Baugh
  * Title: App Functions
- * Description: Holds SMS and email creatioons funcs. 
+ * Description: Holds SMS, SMTP & remote batch file activation. 
  */
 
 using System;
@@ -36,7 +36,7 @@ namespace WinHRTool
 
             var sms = MessageResource.Create( //sends the message to number passed into sendSMS()
                 body: message,
-                from: new Twilio.Types.PhoneNumber("+18508314020"),
+                from: new Twilio.Types.PhoneNumber(Properties.Settings.Default.twilioNumber),
                 to: new Twilio.Types.PhoneNumber(phoneNum)
             );
 
@@ -53,10 +53,10 @@ namespace WinHRTool
         {
             bool beenSent = false; //message delivery verification flag
 
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            var smtpClient = new SmtpClient(Properties.Settings.Default.emailSMTP)
             {
                 Port = 587,
-                Credentials = new NetworkCredential("dbaugh@cardinalpeak.com", Properties.Settings.Default.gmaillAppPass),
+                Credentials = new NetworkCredential(Properties.Settings.Default.emailUser, Properties.Settings.Default.gmaillAppPass),
                 EnableSsl = true,
             };
 
@@ -72,7 +72,7 @@ namespace WinHRTool
 
         private void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
-            
+            //In progress...
 
             if (e.Cancelled)
             {
@@ -100,24 +100,13 @@ namespace WinHRTool
 
             try
             {
-                //converts the password retrieved from persistant settings to SecureString for processing in PS
-                /*var pw = PowerShell.Create().AddCommand("ConvertTo-SecureString")
-                .AddParameter("String", Properties.Settings.Default.gcdsPass)
-                .AddParameter("AsPlainText")
-                .AddParameter("Force")
-                .Invoke();
+                
+                ps.AddScript(File.ReadAllText(Properties.Settings.Default.scriptDirectory));
 
-                //creates the credentials object to authenticate PowerShell command using information retrieved from settings
-                var credential = PowerShell.Create().AddCommand("New-Object")
-                    .AddParameter("TypeName", "System.Management.Automation.PSCredential")
-                    .AddParameter("ArgumentList", new object[] { Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.gcdsUser, pw[0] }) // String, SecureString
-                    .Invoke();
-
-                //New-ADUser PowerShell command in C#
-                ps.AddCommand("Invoke-Command").AddParameter("ComputerName", "os-dcpp102.cardinalpeak.com").AddParameter("Credential", credential[0]).
-                    AddParameter("ErrorAction", "Stop").AddParameter("ScriptBlock", ScriptBlock.Create("{Invoke-Expression -Command:cmd.exe /c 'C:\\Users\\dkvpn\\Desktop\\gcdssync.bat'}"));*/
-
-                ps.AddScript(File.ReadAllText("..\\psscripts\\runcmdremote.ps1"));
+                ps.AddArgument(Properties.Settings.Default.adUser);
+                ps.AddArgument(Properties.Settings.Default.adPass);
+                ps.AddArgument(Properties.Settings.Default.adFQDN);
+                ps.AddArgument(Properties.Settings.Default.batCMD);
 
                 ps.Invoke(); //actual execution of New-ADUser
 
