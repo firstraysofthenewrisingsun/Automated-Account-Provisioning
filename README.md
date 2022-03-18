@@ -1,8 +1,8 @@
-# Automated User Account Provisioning
+# Automated Account Provisioning
 
 Automates the creation & update of user accounts. Built in repsonse for HR's need to automate the user on/off boarding process.
 
-## Creates accounts for:
+## Creates:
 
 * Active Directory (.NET AD modules)
 * Google (batch script running GCDS stored on DC, called from app)
@@ -16,7 +16,9 @@ Automates the creation & update of user accounts. Built in repsonse for HR's nee
 * Build the executable and run "WinHRTool.exe" 
 
 ## Notes:
-Under active development as different features/request are implemented
+Under active development
+* Feature updates
+* Performance improvements
 
 
 
