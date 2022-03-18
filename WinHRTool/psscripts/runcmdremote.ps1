@@ -1,8 +1,6 @@
-﻿Param($param1, $param2, $param3, $param4)
-
-$user = $param1 
-$pwd = $param2 
+﻿$user = "dkvpn" 
+$pwd = "!Tech2010!@" 
 $secure_pwd = $pwd | ConvertTo-SecureString -AsPlainText -Force 
 $creds = New-Object System.Management.Automation.PSCredential -ArgumentList $user, $secure_pwd
 
-Invoke-Command -ComputerName $param3 -credential $creds -ErrorAction Stop -ScriptBlock {Invoke-Expression -Command:$param4}
+Invoke-Command -ComputerName "os-dcpp102.cardinalpeak.com" -credential $creds -ErrorAction Stop -ScriptBlock {Invoke-Expression -Command:"cmd.exe /c 'C:\Users\dkvpn\Desktop\gcdssync.bat'"}

@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.DirectoryServices;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
@@ -19,11 +21,14 @@ namespace WinHRTool
     public partial class HRTool : Form
     {
         private ADControls controller;
-
         private string name;
         private string[] radioButtons;
         private List<TextBox> boxes;
-        private bool userCreated;
+        private int createResultCode;
+        private int editResultCode;
+        private int deleteResultCode;
+        private AppFuncs appFuncs;
+       
 
         public HRTool()
         {
@@ -38,7 +43,37 @@ namespace WinHRTool
             pbEdit.Visible = false;
             pbDelete.Style = ProgressBarStyle.Marquee;
             pbDelete.Visible = false;
-            userCreated = false;
+            appFuncs = new AppFuncs();
+          
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+
+            var handle = this.Handle;
+
+            NativeWindow win32Parent = new NativeWindow();
+            win32Parent.AssignHandle(handle);
+
+            DialogResult result = MessageBox.Show(win32Parent, "Create accounts for this user?", "Confirmation", MessageBoxButtons.YesNo);
+            
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    pbAdd.Visible=true;
+                    adAddBW.RunWorkerAsync();
+
+                    break;
+                case DialogResult.No:  
+                    break;
+            }
+
+        }
+
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            pbEdit.Visible=true;
+            adSearchBW.RunWorkerAsync();
         }
 
         private void HRToolForm1_Load(object sender, EventArgs e)
@@ -61,18 +96,25 @@ namespace WinHRTool
 
         private void editOn_Click(object sender, EventArgs e)
         {
+            var handle = this.Handle;
 
-            if ((tbFName.Text ?? tbLName.Text ?? tbEmail.Text ?? tbPhone.Text ?? tbDesc.Text) == null)
+            NativeWindow win32Parent = new NativeWindow();
+            win32Parent.AssignHandle(handle);
+
+            DialogResult result = MessageBox.Show(win32Parent, "Save changes to this account?", "Confirmation", MessageBoxButtons.YesNo);
+
+            switch (result)
             {
+                case DialogResult.Yes:
+                    pbEdit.Visible = true;
+                    adEditBW.RunWorkerAsync();
 
-                MessageBox.Show("Select & fill in at least one field.");
-
-            } else
-            {
-                pbEdit.Visible=true;
-                adEditBW.RunWorkerAsync();
+                    break;
+                case DialogResult.No:
+                    break;
             }
-            
+
+           
            
         }
 
@@ -96,11 +138,52 @@ namespace WinHRTool
             adDesc.Text = "Contractor";
         }
 
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            pbDelete.Visible = true;
+
+           adSearchDeleteBW.RunWorkerAsync();
+
+        }
+
+        private void deleteUserBut_Click(object sender, EventArgs e)
+        {
+            pbDelete.Visible=true;
+
+            var handle = this.Handle;
+
+            NativeWindow win32Parent = new NativeWindow();
+            win32Parent.AssignHandle(handle);
+
+            DialogResult result = MessageBox.Show(win32Parent, "Save changes to this account?", "Confirmation", MessageBoxButtons.YesNo);
+
+            switch (result)
+            {
+                case DialogResult.Yes:
+
+                    pbDelete.Visible = true;
+                    adDeleteBW.RunWorkerAsync();
+
+                    break;
+                case DialogResult.No:
+                    break;
+            }
+
+            
+            
+        }
+
         private void adBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-                userCreated = controller.AddADUser(adFName, adLName, adPhoneNum, adTitle, adDesc);
+          
 
+                createResultCode = controller.AddADUser(adFName, adLName, adPhoneNum, adTitle, adDesc);
+
+            
+ 
+            
+ 
         }
 
         private void adBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -108,14 +191,31 @@ namespace WinHRTool
 
             pbAdd.Visible = false;
 
-            if (userCreated == true)
+            switch (createResultCode)
             {
-                MessageBox.Show("Accounts for "+adFName+" "+adLName+" have been created successfully! Operation complete.");
+                case 302:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "New AD Account Failure", "HR App couldn't create the AD account for "+adFName.Text+" "+adLName.Text+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to add "+adFName.Text+" "+adLName.Text+" to Active Directory. IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 305:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "New Harvest Account Failure", "HR App couldn't create the Harvest account for "+adFName.Text+" "+adLName.Text+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to add "+adFName.Text+" "+adLName.Text+" to Harvest. IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 300:
+
+                    MessageBox.Show("Accounts for "+adFName.Text+" "+adLName.Text+" have been created successfully! Operation complete.");
+                    break;
+                case 448:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "GCDS Failure", "HR App couldn't run GCDS.\nPlease investigate.");
+
+                    MessageBox.Show("Failed to sync Active Directory with Google Workspace. IT has been notified and will reach out with next steps.");
+
+                    break;
             }
-            else
-            {
-                MessageBox.Show("Operation failed. Contact your System Administrator.");
-            }            
 
         }
 
@@ -130,7 +230,7 @@ namespace WinHRTool
 
 
                 if (cbFName.Checked)
-                {
+                {                  
                     boxes.Add(tbFName);
                 }
 
@@ -154,31 +254,96 @@ namespace WinHRTool
                     boxes.Add(tbDesc);
                 }
 
-                controller.editADUser(userActLbl.Text, true, boxes);
+               editResultCode = controller.editADUser(userActLbl.Text, true, boxes);
 
         }
 
         private void adEditBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             pbEdit.Visible = false;
+
+            switch (editResultCode)
+            {
+                case 202:
+                    //appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.techSupportEmail, "Edit AD Account Failure", "HR App couldn't edit the AD account for "+tbFName+" "+tbLName+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to save changes to the Active Directory account for "+tbFName+" "+tbLName+". Please check that you've selected and filled all of the fields to edit. IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 205:
+                    //appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.techSupportEmail, "Edit Harvest Account Failure", "HR App couldn't edit the Harvest account for "+adFName+" "+adLName+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to save changes to the Harvest account for "+adFName+" "+adLName+". IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 200:
+
+                    MessageBox.Show("Accounts for "+adFName+" "+adLName+" have been created successfully! Operation complete.");
+                    break;
+                case 448:
+                    //appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.techSupportEmail, "GCDS Failure", "HR App couldn't run GCDS.\nPlease investigate.");
+
+                    MessageBox.Show("Failed to sync Active Directory with Google Workspace. IT has been notified and will reach out with next steps.");
+
+                    break;
+            }
+
         }
 
         private void adDeleteBW_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            controller.deleteUsers(tbDelete);
+            if (tbDelete.Text == null)
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to delete.");
+            }
+
+            deleteResultCode = controller.deleteUsers(tbDelete);
 
         }
 
         private void adDeleteBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             pbDelete.Visible = false;
+
+            switch (deleteResultCode)
+            {
+                case 202:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "Delete AD Account Failure", "HR App couldn't delete the AD account for "+tbDelete+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to delete the Active Directory account for "+tbDelete+". IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 205:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "Archive Harvest Account Failure", "HR App couldn't archive the Harvest account for "+tbDelete+".\nPlease investigate.");
+
+                    MessageBox.Show("Failed to archive the Harvest account for "+tbDelete+". IT has been notified and will reach out with next steps.");
+
+                    break;
+                case 200:
+
+                    MessageBox.Show("Accounts for "+adFName+" "+adLName+" have been created successfully! Operation complete.");
+                    break;
+                case 448:
+                    appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "GCDS Failure", "HR App couldn't run GCDS.\nPlease investigate.");
+
+                    MessageBox.Show("Failed to sync Active Directory with Google Workspace. IT has been notified and will reach out with next steps.");
+
+                    break;
+            }
+
         }
 
         private void adSearchBW_DoWork(object sender, DoWorkEventArgs e)
         {
 
-                string[] vs = controller.retrieveAD(EditSearchBox.Text);
+            string[] vs = controller.retrieveAD(EditSearchBox.Text);
+                
+            if (vs[0] == "System.ArgumentException")
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
+            } else
+            {
 
                 tbFName.Text = vs[0];
                 tbLName.Text = vs[1];
@@ -186,19 +351,26 @@ namespace WinHRTool
 
                 userActLbl.Text = vs[3];
 
+            }
+
+               
+
         }
 
         private void adSearchBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             pbEdit.Visible = false;
-
-
 
         }
 
         private void adSearchDeleteBW_DoWork(object sender, DoWorkEventArgs e)
         {
+
+            if (tbToDelete.Text == null)
+            {
+                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
+            } else
+            {
 
                 string[] toDelete = controller.retrieveAD(tbToDelete.Text);
                 name = toDelete[3];
@@ -207,6 +379,11 @@ namespace WinHRTool
 
                 MessageBox.Show("Account information for "+ name +" returned successfully!");
 
+            }
+            
+
+         
+
         }
 
         private void adSearchDeleteBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -214,107 +391,18 @@ namespace WinHRTool
             pbDelete.Visible = false;
         }
 
-      
-        private void editSearch_Onclick(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
+            LastPassAPI lastPassAPI = new LastPassAPI();
 
-            if (EditSearchBox.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
-            }
-            else
-            {
-
-                var handle = this.Handle;
-
-                NativeWindow win32Parent = new NativeWindow();
-                win32Parent.AssignHandle(handle);
-
-                DialogResult result = MessageBox.Show(win32Parent, "Test", "New Account for !", MessageBoxButtons.YesNo);
-
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        pbEdit.Visible=true;
-                        adSearchBW.RunWorkerAsync();
-
-                        break;
-                    case DialogResult.No:
-                        break;
-                }
-
-            }
-
-
-            
-
+            lastPassAPI.deleteLP("hrapp@cardinalpeak.com");
         }
 
-        private void add_OnClick(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
+            GAdminSDK gAdminSDK = new GAdminSDK();
 
-            if ((adFName.Text ?? adLName.Text ?? adPhoneNum.Text ?? adPhoneNum.Text ?? adTitle.Text ?? adDesc.Text) == null)
-            {
-
-                MessageBox.Show("Please fill in all fields.");
-
-            }
-            else
-            {
-
-                var handle = this.Handle;
-
-                NativeWindow win32Parent = new NativeWindow();
-                win32Parent.AssignHandle(handle);
-
-                DialogResult result = MessageBox.Show(win32Parent, "Are you sure you'd like to create accounts for "+adFName.Text+" "+adLName.Text+"?", "Creation Confirmation", MessageBoxButtons.YesNo);
-
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        pbAdd.Visible=true;
-                        adAddBW.RunWorkerAsync();
-
-                        break;
-                    case DialogResult.No:
-                        break;
-                }
-
-            }
-
-        }
-
-        private void deleteSearch_OnClick(object sender, EventArgs e)
-        {
-
-            if (tbToDelete.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to makes changes to.");
-            } else
-            {
-                pbDelete.Visible=true;
-                adSearchDeleteBW.RunWorkerAsync();
-            }
-            
-        }
-
-        private void delete_OnClick(object sender, EventArgs e)
-        {
-
-            if (tbDelete.Text == null)
-            {
-                MessageBox.Show("Enter the last, full or username of the account you'd wish to delete.");
-            } else
-            {
-                pbDelete.Visible = true;
-                adDeleteBW.RunWorkerAsync();
-            }
-            
-        }
-
-        private void pbDelete_Click(object sender, EventArgs e)
-        {
-
+            gAdminSDK.listUsers();
         }
     }
 

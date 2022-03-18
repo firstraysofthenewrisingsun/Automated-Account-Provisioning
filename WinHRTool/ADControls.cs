@@ -1,7 +1,7 @@
 ﻿/*
  * Author: Derek Baugh
  * Title: Active Directory Controls
- * Description: Holds all functions controlling Active Directory user account management. Utilized by HRTool Form
+ * Description: Holds all functions pertaining to Active Directory user account management. Utilized by HRTool Form 
  */
 using System;
 using System.Collections.Generic;
@@ -21,70 +21,80 @@ namespace WinHRTool
     {
         private AppFuncs appFuncs;
         private HarvestAPI harvestAPI;
+        private LastPassAPI lastPassAPI;
         public ADControls()
         {
             appFuncs = new AppFuncs();
             harvestAPI = new HarvestAPI();
+            lastPassAPI = new LastPassAPI();
         }
 
         public string[] retrieveAD(string searchedUser)
         {
-
-            /* Retrieves all ad users and list their attributes. Can search by last, full and SamAccountName.*/
-
-            string DomainPath = "LDAP://"+Properties.Settings.Default.adPDC+"."+Properties.Settings.Default.adDomain+"/"+Properties.Settings.Default.adPath;
-            DirectoryEntry searchRoot = new DirectoryEntry(DomainPath); //sets path of OU being searched
-            searchRoot.Username = Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.adUser; //username of DA acct
-            searchRoot.Password = Properties.Settings.Default.adPass; //psswd of DA acct
-
-            DirectorySearcher search = new DirectorySearcher(searchRoot); //AD search module from .NET, starts at aforementioned domain path
-
-            search.Filter = String.Format("(&(objectCategory=person)(anr={0}))", searchedUser); //only show account objects listed as 'person' with the name passed to retrieveAD(), can search by last, full and SamAccount name
-
-            SearchResult resultCol = search.FindOne(); //search result as an object for manipulation
-
-            string[]data = new string[5]; //string array to hold AD user object data
-          
-            foreach (PropertyValueCollection key in resultCol.GetDirectoryEntry().Properties.Values) //goes through each property attribute set on the AD user object
+            string[] data = new string[5]; //string array to hold AD user object data
+            try
             {
-                Console.WriteLine(key.PropertyName+": "+key.Value);
-    
-                switch (key.PropertyName) //assigning property data to string array
+
+
+                string DomainPath = "LDAP://"+Properties.Settings.Default.adPDC+"."+Properties.Settings.Default.adDomain+"/"+Properties.Settings.Default.adPath;
+                DirectoryEntry searchRoot = new DirectoryEntry(DomainPath); //sets path of OU being searched
+                searchRoot.Username = Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.adUser; //username of DA acct
+                searchRoot.Password = Properties.Settings.Default.adPass; //psswd of DA acct
+
+                DirectorySearcher search = new DirectorySearcher(searchRoot); //AD search module from .NET, starts at aforementioned domain path
+
+                search.Filter = String.Format("(&(objectCategory=person)(anr={0}))", searchedUser); //only show account objects listed as 'person' with the name passed to retrieveAD(), can search by last, full and SamAccount name
+
+                SearchResult resultCol = search.FindOne(); //search result as an object for manipulation
+
+                foreach (PropertyValueCollection key in resultCol.GetDirectoryEntry().Properties.Values) //goes through each property attribute set on the AD user object
                 {
-                    case "givenName":
+                    Console.WriteLine(key.PropertyName+": "+key.Value);
 
-                        data[0] = key.Value.ToString();
+                    switch (key.PropertyName) //assigning property data to string array
+                    {
+                        case "givenName":
 
-                        break;
+                            data[0] = key.Value.ToString();
 
-                    case "sn":
+                            break;
 
-                        data[1] = key.Value.ToString();
+                        case "sn":
 
-                        break;
-                    case "userPrincipalName":
+                            data[1] = key.Value.ToString();
 
-                        data[2] = key.Value.ToString();
+                            break;
+                        case "userPrincipalName":
 
-                        break;
-                    case "sAMAccountName":
+                            data[2] = key.Value.ToString();
 
-                        data[3] = key.Value.ToString();
+                            break;
+                        case "sAMAccountName":
 
-                        break;
-                    case "department":
+                            data[3] = key.Value.ToString();
 
-                        data[4] = key.Value.ToString();
+                            break;
+                        case "department":
 
-                        break;
+                            data[4] = key.Value.ToString();
 
+                            break;
 
-
+                    }
 
                 }
-          
+
+            } catch (Exception ex)
+            {
+                if (ex is ArgumentException)
+                {
+                    string[] error = new string[5];
+                    error[0] = ex.GetType().ToString();
+
+                    return error;
+                }
             }
-            
+
             return data; //returns the array with attribute properties for later processing
            
         }
@@ -132,15 +142,14 @@ namespace WinHRTool
 
         }
 
-        public bool AddADUser(params TextBox[] textBoxes)
+        public int AddADUser(params TextBox[] textBoxes)
         {
             /* 
              * Wrapper for PS command New-ADUser
              * Sends onboarding SMS to new users number with AD login info & creation notification emmail to CPIT HR servicedesk 
              */
 
-
-            bool userCreated = false;
+            bool isContractor;
 
             Runspace rs = RunspaceFactory.CreateRunspace(); //instantiate PowerShell runspace that will process the New-ADUser module called later
             rs.Open(); //opens the runspace, available to use
@@ -180,68 +189,97 @@ namespace WinHRTool
 
                 string email = username+"@cardinalpeak.com"; //creates email according to policy
 
-           
-
-                
-                //New-ADUser PowerShell command in C#
+                //New-ADUser PS command in C#
                 ps.AddCommand("New-ADUser").AddParameter("GivenName", textBoxes[0].Text).AddParameter("SurName", textBoxes[1].Text).AddParameter("Name", textBoxes[0].Text+" "+textBoxes[1].Text)
                     .AddParameter("EmailAddress", email).AddParameter("MobilePhone", textBoxes[2].Text)
                     .AddParameter("Title", textBoxes[3].Text).AddParameter("description", textBoxes[4].Text).AddParameter("UserPrincipalName", username).AddParameter("SamAccountName", username).AddParameter("Accountpassword", newPW[0])
                     .AddParameter("Enabled", 1).AddParameter("Path", Properties.Settings.Default.adPath)
                     .AddParameter("Server", Properties.Settings.Default.adPDC).AddParameter("Credential", credential[0]);
 
-                ps.Invoke(); //actual execution of New-ADUser
+                //executes New-ADUser
+                ps.Invoke();
 
-                appFuncs.startBAT(); //runs GCDS sync from batch script on domain controller (or wherever)
-
-               
-                userCreated = true; //new user process complete flag
-                
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                
-                string message = Properties.Settings.Default.emailMessage;
-
-                bool smsSent = appFuncs.sendSMS(textBoxes[2].Text, message); //sends onboarding sms to new user at specified number.
-
-                bool emailSent = appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
-
-                string harvestID = harvestAPI.createHarvestUser(textBoxes[0].Text, textBoxes[1].Text, email); //creates Harvest accounts, automatically sends enrollment email
-                
-                if (harvestID == null)
+                //runs GCDS sync from batch script on os-dcpp102
+                int psScriptResult = appFuncs.startBAT();
+                if (psScriptResult == 448)
                 {
-                    
-                    return false;
+                    rs.Close();
+                    return psScriptResult;
                 }
 
+                //creates Last Pass
+                bool lastPassCreated = lastPassAPI.addLP(email, textBoxes[0]+" "+textBoxes[1], password);
+
+                if (lastPassCreated == false)
+                {
+                    rs.Close();
+                    return 825;
+                }
+
+                //creates Harvest
+                if (textBoxes[4].Text.Equals("Contractor"))
+                {
+                    isContractor = true;
+                } else
+                {
+                    isContractor = false;
+                }
+
+                string harvestID = harvestAPI.createHarvestUser(textBoxes[0].Text, textBoxes[1].Text, email, isContractor);
+
+                if (harvestID == null)
+                {
+                    rs.Close();
+                    return 305;
+                }
+
+                //assigns Harvets user ID to AD account under department attribute
                 TextBox info = new TextBox();
                 info.Tag = "department";
                 info.Text = harvestID;
                 List<TextBox> edits = new List<TextBox>();
                 edits.Add(info);
-                editADUser(username, false, edits); //assigns Harvets user ID to AD account under department attribute
+                
+                editADUser(username, false, edits);
 
-                rs.Close();
+                string message = "Welcome to Cardinal Peak!\nCongratulations on your new position! We're excited to have you join the team\nAs part of our automated onboarding process you'll receive this text message and an account setup email for your Cardinal Peak Google account\n" +
+                    "Your credentials for your Active Directory account are as follows\nUsername: "+username+"\n"+"Password: "+password+"\n"+"Please use these credentials to login into the VPN and authenticate actions on your computer";
+
+                //sends onboarding sms to new user at specified number.
+                int smsVerification = appFuncs.sendSMS(textBoxes[2].Text, message);
+
+                if (smsVerification == 536)
+                {
+                    rs.Close();
+                    return smsVerification;
+                }
+
+                appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "Accounts for new user "+username+"", "New accounts for "+username+" have been created!"); //sends account verfification to notification email entered during initial setup
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                rs.Close();
+                return 302;
             }
 
-            return userCreated;
+            rs.Close();
+
+            return 300;
         }
 
-        public bool editADUser(string user, bool operationParam, List<TextBox> textBoxes)
+        public int editADUser(string user, bool operationParam, List<TextBox> textBoxes)
         {
 
           /* 
            * Wrapper for PS command Set-ADUser.
-           * Sets attributes specified by user (only a select few are accessible to meet work requirements).
+           * Sets attributes specified by user (only a select few are accessible).
            */
 
             Dictionary<string, string>harvestAttributes = new Dictionary<string, string>();
 
-            bool editsComplete = false;
+            bool harvestComplete;
 
             Runspace rs = RunspaceFactory.CreateRunspace(); //same PowerShell initialization as addADUser()
             rs.Open();
@@ -268,8 +306,7 @@ namespace WinHRTool
 
                 foreach (TextBox txt in textBoxes)
                 {
-                    ps.AddCommand("Set-ADUser").AddParameter("Identity", user).AddParameter("Server", Properties.Settings.Default.adPDC)
-                        .AddParameter("Credential", credential[0]).AddParameter(txt.Tag.ToString(), txt.Text); //changes the selected attributes. AD attribute names are tagged to textbox object for selection
+                    ps.AddCommand("Set-ADUser").AddParameter("Identity", user).AddParameter("Server", Properties.Settings.Default.adPDC).AddParameter("Credential", credential[0]).AddParameter(txt.Tag.ToString(), txt.Text); //changes the attributes selected byt the operator. attribute names are tagged to textbox object for selection
                     ps.Invoke();
 
                     if (txt.Tag.ToString() == "GivenName")
@@ -289,58 +326,107 @@ namespace WinHRTool
 
                 }
 
-                if (operationParam != false)//updates Harvest with new data if flag raised
-                {
-                    string[] userAttributes = retrieveAD(user);
-
-                    harvestAPI.editHarvestUser(userAttributes[4], harvestAttributes); 
-                }
-                
-                editsComplete = true;
-
-                appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
-
-                rs.Close();
-             
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                if (ex is ArgumentException)
+                {
+                    rs.Close();
+                    return 202;
+                }
+   
             }
 
+                
+            //runs GCDS sync from batch script on os-dcpp102
+                int psScriptResult = appFuncs.startBAT();
+                if (psScriptResult == 448)
+                {
+                    rs.Close();
+                    return psScriptResult;
+                }
 
-            return editsComplete;
+
+
+
+             //updates Last Pass
+
+
+            //updates Harvest if flag raised
+            if (operationParam != false)
+            {
+                string[] userAttributes = retrieveAD(user);
+
+                harvestComplete = harvestAPI.editHarvestUser(userAttributes[4], harvestAttributes);
+
+                if (harvestComplete == false)
+                {
+                    rs.Close();
+
+                    return 205;
+                }
+            }
+
+            string message = "Changes made";
+            //sends account verfification to notification email entered during initial setup
+            appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "Edits to "+user, message);
+
+            rs.Close();
+
+            return 200;
         }
 
-        public bool deleteUsers(TextBox user)
+        public int deleteUsers(TextBox user)
         {
             /* 
              * Deletes specified AD user object & assosciated accounts 
              */
 
-            bool deletionComplete = false;
+            try
+            {
+                string DomainPath = "LDAP://"+Properties.Settings.Default.adPDC+"."+Properties.Settings.Default.adDomain+"/"+Properties.Settings.Default.adPath;
+                DirectoryEntry searchRoot = new DirectoryEntry(DomainPath);
+                searchRoot.Username = Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.adUser;
+                searchRoot.Password = Properties.Settings.Default.adPass;
+                DirectorySearcher search = new DirectorySearcher(searchRoot);
+                search.Filter = String.Format("(&(objectCategory=person)(anr={0}))", user.Text);
 
-            string DomainPath = "LDAP://"+Properties.Settings.Default.adPDC+"."+Properties.Settings.Default.adDomain+"/"+Properties.Settings.Default.adPath;
-            DirectoryEntry searchRoot = new DirectoryEntry(DomainPath);
-            searchRoot.Username = Properties.Settings.Default.adDomain+"\\"+Properties.Settings.Default.adUser;
-            searchRoot.Password = Properties.Settings.Default.adPass;
-            DirectorySearcher search = new DirectorySearcher(searchRoot);
-            search.Filter = String.Format("(&(objectCategory=person)(anr={0}))", user.Text);
+                SearchResult resultCol = search.FindOne();
 
-            SearchResult resultCol = search.FindOne();
+                //deletes AD object
+                resultCol.GetDirectoryEntry().DeleteTree();  
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                return 102;
+            }
+
+            //runs GCDS sync from batch script on os-dcpp102
+            int psScriptResult = appFuncs.startBAT();
+            if (psScriptResult == 448)
+            {
+                return psScriptResult;
+            }
+
             string harvestID = "";
 
-            resultCol.GetDirectoryEntry().DeleteTree(); //deletes AD object 
+            //archives Harvest account
+            bool harvestArchiveComplete = harvestAPI.archiveHarvestUser(harvestID); 
 
-            harvestAPI.archiveHarvestUser(harvestID); //archives Harvest account
+            if (harvestArchiveComplete == false)
+            {
+                return 105;
+            }
 
-            deletionComplete = true;
+            string message = "Account for "+user+" deleted!";
 
-            bool emailSent = appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, Properties.Settings.Default.emailTitle, Properties.Settings.Default.emailMessage); //sends account verfification to notification email entered during initial setup
+            //sends notification email to hr it servicedesk
+            appFuncs.gmailSMTP(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailRecipient, "Account for "+user+ " deleted", message); 
 
-
-            return deletionComplete;
+            return 100;
         }
 
        

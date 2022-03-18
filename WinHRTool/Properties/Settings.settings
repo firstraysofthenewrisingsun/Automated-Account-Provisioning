@@ -26,7 +26,13 @@
     <Setting Name="harvestURL" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="snipeKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="harvestKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="snipeURL" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="harvestID" Type="System.String" Scope="Application">
@@ -38,44 +44,47 @@
     <Setting Name="gcdsPass" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="lastpassURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="lastpassID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="lastpassKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="twilioID" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="twilioToken" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="gmaillAppPass" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="emailSMTP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">smtp.gmail.com</Value>
     </Setting>
-    <Setting Name="emailMessage" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="scriptPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">..\psscripts\runcmdremote.ps1</Value>
     </Setting>
     <Setting Name="emailRecipient" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="emailTitle" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="emailEditMessage" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="emailSMTP" Type="System.String" Scope="User">
+    <Setting Name="techSupportEmail" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="adFQDN" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="batCMD" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cmd.exe /c 'C:\Users\dkvpn\Desktop\gcdssync.bat'</Value>
+    </Setting>
+    <Setting Name="googleAPIKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="scriptDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="googleAdminJSON" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\keys\hrautomation_googleSDK.json</Value>
     </Setting>
-    <Setting Name="Setting" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">..\\psscripts\\runcmdremote.ps1</Value>
-    </Setting>
-    <Setting Name="twilioNumber" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="tokenDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\key\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

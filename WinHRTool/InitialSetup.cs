@@ -15,30 +15,20 @@ namespace WinHRTool
 
         private void submitOnClick(object sender, EventArgs e)
         {
-            if ((initTbADDC.Text ?? initTbADDomain.Text ?? initTbADPass.Text ?? initTbADPath.Text ?? initTbADUser.Text ?? initTbEmail.Text ?? initTbEmailPass.Text) == null)
-            {
 
-                MessageBox.Show("Enter credentials for the LUS AD account.");
+            string emailPass = Properties.Settings.Default.emailPass;
+            string emailuser = Properties.Settings.Default.emailUser;
+            byte[] vs1 = System.Convert.FromBase64String(emailPass);
+            byte[] vs = Protect.Decrypt(vs1);
 
-            } else
-            {
+            string v = System.Text.Encoding.Default.GetString(vs);
 
-                string emailPass = Properties.Settings.Default.emailPass;
-                string emailuser = Properties.Settings.Default.emailUser;
-                byte[] vs1 = System.Convert.FromBase64String(emailPass);
-                byte[] vs = Protect.Decrypt(vs1);
+            MessageBox.Show("Credentials saved. Proceeding to management console."+ " "+emailuser);
 
-                string v = System.Text.Encoding.Default.GetString(vs);
-
-                MessageBox.Show("Credentials saved. Proceeding to management console."+ " "+emailuser);
-
-                HRTool hRTool = new HRTool();
-                this.Hide();
-                hRTool.ShowDialog();
-                this.Show();
-
-            }
-            
+            HRTool hRTool = new HRTool();
+            this.Hide();
+            hRTool.ShowDialog();
+            this.Show();
 
         }
 
@@ -105,6 +95,9 @@ namespace WinHRTool
            
         }
 
-      
+        private void initTbEmail_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

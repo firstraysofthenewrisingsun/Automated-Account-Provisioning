@@ -396,3 +396,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+WinHRTool/keys/hrautomation_googleSDK.json
+WinHRTool/img/cardinapeaklogo.gif

@@ -54,6 +54,7 @@
             this.initTbEmail.Name = "initTbEmail";
             this.initTbEmail.Size = new System.Drawing.Size(332, 26);
             this.initTbEmail.TabIndex = 0;
+            this.initTbEmail.TextChanged += new System.EventHandler(this.initTbEmail_TextChanged);
             // 
             // btnProtect
             // 

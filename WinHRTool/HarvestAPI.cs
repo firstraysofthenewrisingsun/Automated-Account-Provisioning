@@ -2,8 +2,6 @@
  * Author: Derek Baugh
  * Title: Harvest API
  * Description: Harvest REST API wrapper class for LUS  
- *  
- *
  */
 using Newtonsoft.Json.Linq;
 using System;
@@ -27,7 +25,7 @@ namespace WinHRTool
 
         }
 
-        public string createHarvestUser(string fname, string lname, string email)
+        public string createHarvestUser(string fname, string lname, string email, bool isContractor)
         {
             string id = "";
             try
@@ -48,7 +46,11 @@ namespace WinHRTool
                         {
                             first_name = fname,
                             last_name = lname,
-                            email = email
+                            email = email,
+                            is_active = true,
+                            roles = new string[] {"Bench", "Holiday", "PTO"},
+                            is_contractor = isContractor
+
                         });
 
                         streamWriter.Write(json);
@@ -86,20 +88,18 @@ namespace WinHRTool
             }
             catch (Exception ex )
             {
-                if (ex.GetType() == typeof(WebException))
-                {
-                    return null;
-                }
                 Console.WriteLine(ex.ToString());
+
+                return null;
+                
             }
             
 
             return id;
         }
 
-        public void editHarvestUser(string id, Dictionary<string, string> changedAttributes)
+        public bool editHarvestUser(string id, Dictionary<string, string> changedAttributes)
         {
-
 
             try
             {
@@ -145,13 +145,16 @@ namespace WinHRTool
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                
+                return false;
             }
+
+            return true;
 
         }
 
-        public void archiveHarvestUser(string id)
+        public bool archiveHarvestUser(string id)
         {
-
 
             try
             {
@@ -190,7 +193,6 @@ namespace WinHRTool
                                 {
                                     Console.WriteLine(item.Value);
 
-
                                 }
 
                             }
@@ -202,11 +204,13 @@ namespace WinHRTool
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
 
-        }
-           
+            return true;
 
+        }
 
     }
 }

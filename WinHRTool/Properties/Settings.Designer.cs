@@ -119,9 +119,27 @@ namespace WinHRTool.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string snipeKey {
+            get {
+                return ((string)(this["snipeKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string harvestKey {
             get {
                 return ((string)(this["harvestKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string snipeURL {
+            get {
+                return ((string)(this["snipeURL"]));
             }
         }
         
@@ -155,6 +173,33 @@ namespace WinHRTool.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastpassURL {
+            get {
+                return ((string)(this["lastpassURL"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastpassID {
+            get {
+                return ((string)(this["lastpassID"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastpassKey {
+            get {
+                return ((string)(this["lastpassKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string twilioID {
             get {
                 return ((string)(this["twilioID"]));
@@ -170,24 +215,24 @@ namespace WinHRTool.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string gmaillAppPass {
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.gmail.com")]
+        public string emailSMTP {
             get {
-                return ((string)(this["gmaillAppPass"]));
+                return ((string)(this["emailSMTP"]));
+            }
+            set {
+                this["emailSMTP"] = value;
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string emailMessage {
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\psscripts\\runcmdremote.ps1")]
+        public string scriptPath {
             get {
-                return ((string)(this["emailMessage"]));
-            }
-            set {
-                this["emailMessage"] = value;
+                return ((string)(this["scriptPath"]));
             }
         }
         
@@ -206,36 +251,12 @@ namespace WinHRTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string emailTitle {
+        public string techSupportEmail {
             get {
-                return ((string)(this["emailTitle"]));
+                return ((string)(this["techSupportEmail"]));
             }
             set {
-                this["emailTitle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string emailEditMessage {
-            get {
-                return ((string)(this["emailEditMessage"]));
-            }
-            set {
-                this["emailEditMessage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string emailSMTP {
-            get {
-                return ((string)(this["emailSMTP"]));
-            }
-            set {
-                this["emailSMTP"] = value;
+                this["techSupportEmail"] = value;
             }
         }
         
@@ -253,7 +274,7 @@ namespace WinHRTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("cmd.exe /c \'C:\\Users\\dkvpn\\Desktop\\gcdssync.bat\'")]
         public string batCMD {
             get {
                 return ((string)(this["batCMD"]));
@@ -266,33 +287,36 @@ namespace WinHRTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string scriptDirectory {
+        public string googleAPIKey {
             get {
-                return ((string)(this["scriptDirectory"]));
+                return ((string)(this["googleAPIKey"]));
             }
             set {
-                this["scriptDirectory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("..\\\\psscripts\\\\runcmdremote.ps1")]
-        public string Setting {
-            get {
-                return ((string)(this["Setting"]));
+                this["googleAPIKey"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string twilioNumber {
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\keys\\hrautomation_googleSDK.json")]
+        public string googleAdminJSON {
             get {
-                return ((string)(this["twilioNumber"]));
+                return ((string)(this["googleAdminJSON"]));
             }
             set {
-                this["twilioNumber"] = value;
+                this["googleAdminJSON"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\key\\")]
+        public string tokenDir {
+            get {
+                return ((string)(this["tokenDir"]));
+            }
+            set {
+                this["tokenDir"] = value;
             }
         }
     }

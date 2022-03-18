@@ -1,7 +1,7 @@
 ﻿/*
  * Author: Derek Baugh
  * Title: App Functions
- * Description: Holds SMS, SMTP & remote batch file activation. 
+ * Description: Holds SMS and email creatioons funcs. 
  */
 
 using System;
@@ -24,10 +24,8 @@ namespace WinHRTool
 
         }
 
-        public bool sendSMS(string phoneNum, string message)
+        public int sendSMS(string phoneNum, string message)
         {
-
-            bool beenSent = false; //message delivery verification flag
 
             string accountSid = Properties.Settings.Default.twilioID;
             string authToken = Properties.Settings.Default.twilioToken;
@@ -36,60 +34,35 @@ namespace WinHRTool
 
             var sms = MessageResource.Create( //sends the message to number passed into sendSMS()
                 body: message,
-                from: new Twilio.Types.PhoneNumber(Properties.Settings.Default.twilioNumber),
+                from: new Twilio.Types.PhoneNumber("+18508314020"),
                 to: new Twilio.Types.PhoneNumber(phoneNum)
             );
 
             if (sms.Status.Equals("sent"))
             {
-                beenSent = true;
+                return 577;
+            } else
+            {
+                return 536;
             }
 
-
-            return beenSent; //flag returned for later processing
         }
 
-        public bool gmailSMTP(string sender, string receiver, string title, string message)
+        public void gmailSMTP(string sender, string receiver, string title, string message)
         {
-            bool beenSent = false; //message delivery verification flag
 
             var smtpClient = new SmtpClient(Properties.Settings.Default.emailSMTP)
             {
                 Port = 587,
-                Credentials = new NetworkCredential(Properties.Settings.Default.emailUser, Properties.Settings.Default.gmaillAppPass),
+                Credentials = new NetworkCredential(Properties.Settings.Default.emailUser, Properties.Settings.Default.emailPass),
                 EnableSsl = true,
             };
 
-            smtpClient.SendMailAsync(sender, receiver,title, message); //sends account creation verfication email to HR Jira servicedesk
-
-            smtpClient.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-
-            smtpClient.Dispose();
-
-
-            return beenSent; //flag returned for later processing
-        }
-
-        private void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
-        {
-            //In progress...
-
-            if (e.Cancelled)
-            {
-               response = "cancel";
-            }
-            if (e.Error != null)
-            {
-               response = e.Error.ToString();
-            }
-            else
-            {
-               response = "sent";
-            }
+            smtpClient.SendMailAsync(sender, receiver, title, message); //sends account creation verfication email to HR Jira servicedesk
 
         }
 
-        public void startBAT()
+        public int startBAT()
         {
 
             Runspace rs = RunspaceFactory.CreateRunspace(); //instantiate PowerShell runspace that will process the New-ADUser module called later
@@ -100,13 +73,8 @@ namespace WinHRTool
 
             try
             {
-                
-                ps.AddScript(File.ReadAllText(Properties.Settings.Default.scriptDirectory));
-
-                ps.AddArgument(Properties.Settings.Default.adUser);
-                ps.AddArgument(Properties.Settings.Default.adPass);
-                ps.AddArgument(Properties.Settings.Default.adFQDN);
-                ps.AddArgument(Properties.Settings.Default.batCMD);
+               
+                ps.AddScript(File.ReadAllText(Properties.Settings.Default.scriptPath));
 
                 ps.Invoke(); //actual execution of New-ADUser
 
@@ -115,7 +83,11 @@ namespace WinHRTool
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return 448;
             }
+
+            return 469;
         }
 
 
