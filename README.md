@@ -1,6 +1,6 @@
 # Automated User Account Provisioning
 
-Automates the creation & update of user accounts. Built this to automate the user on/off boarding process for my jobs HR department.
+Automates the creation & update of user accounts. Built in repsonse for HR's need to automate the user on/off boarding process.
 
 ## Creates accounts for:
 
@@ -11,16 +11,12 @@ Automates the creation & update of user accounts. Built this to automate the use
 * Sends SMS to user with temporary AD credentials (Twilio API)
 * Sends notification emails to relevant personnel for all new accounts and edits (.NET SMTP Client)
 
-### Executing program
+## Executing program
 
 * Build the executable and run "WinHRTool.exe" 
 
-### Troubleshooting
-* Custom error codes and common fixes:
-| Syntax      | Description | Test Text     |
-| :----:      |    :----:   |    :----:     |
-| Header      | Title       | Here's this   |
-| Paragraph   | Text        | And more      |
+## Notes:
+Under active development as different features/request are implemented
 
 
 
